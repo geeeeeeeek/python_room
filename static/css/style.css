@@ -1,0 +1,152 @@
+/* 自定义样式 */
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* 卡片样式 */
+.card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* 座位图样式 */
+.seat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.seat-item {
+    width: 80px;
+    height: 80px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    color: #333;
+}
+
+.seat-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.seat-item.available {
+    background-color: #d4edda;
+    border-color: #28a745;
+}
+
+.seat-item.occupied {
+    background-color: #f8d7da;
+    border-color: #dc3545;
+    cursor: not-allowed;
+}
+
+.seat-item.unavailable {
+    background-color: #e2e3e5;
+    border-color: #6c757d;
+    cursor: not-allowed;
+}
+
+.seat-number {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.seat-status {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* 预约卡片 */
+.booking-card {
+    border-left: 4px solid #007bff;
+}
+
+.booking-card.cancelled {
+    border-left-color: #dc3545;
+    opacity: 0.7;
+}
+
+.booking-card.completed {
+    border-left-color: #28a745;
+}
+
+/* 时段徽章 */
+.time-slot-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.badge-morning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.badge-afternoon {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.badge-evening {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+/* 状态标签 */
+.status-pending {
+    background-color: #ffc107;
+}
+
+.status-approved {
+    background-color: #28a745;
+}
+
+.status-rejected {
+    background-color: #dc3545;
+}
+
+.status-cancelled {
+    background-color: #6c757d;
+}
+
+.status-completed {
+    background-color: #17a2b8;
+}
+
+/* 房间卡片 */
+.room-image {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .seat-grid {
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    }
+
+    .seat-item {
+        width: 60px;
+        height: 60px;
+    }
+}

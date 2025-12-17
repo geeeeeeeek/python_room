@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}个人资料 - 自习室预约系统{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-body text-center">
+                {% if user.avatar %}
+                    <img src="{{ user.avatar.url }}" alt="头像" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                {% else %}
+                    <div class="bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 150px; height: 150px;">
+                        <i class="bi bi-person-circle" style="font-size: 5rem;"></i>
+                    </div>
+                {% endif %}
+                <h4>{{ user.username }}</h4>
+                <p class="text-muted">{{ user.get_role_display }}</p>
+                <p class="mb-1"><strong>学号:</strong> {{ user.student_id }}</p>
+                <p class="mb-1"><strong>注册时间:</strong> {{ user.created_at|date:"Y-m-d" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-pencil-square"></i> 编辑个人资料</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label">邮箱</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="text-danger">{{ form.email.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.phone.id_for_label }}" class="form-label">联系方式</label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}
+                            <div class="text-danger">{{ form.phone.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.avatar.id_for_label }}" class="form-label">头像</label>
+                        {{ form.avatar }}
+                        {% if form.avatar.errors %}
+                            <div class="text-danger">{{ form.avatar.errors }}</div>
+                        {% endif %}
+                        <div class="form-text">支持 JPG, PNG 格式，大小不超过 2MB</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle"></i> 保存修改
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

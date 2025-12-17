@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}座位 {{ seat.seat_number }} - 详情{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">首页</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'room_list' %}">自习室列表</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'room_detail' seat.room.id %}">{{ seat.room.name }}</a></li>
+        <li class="breadcrumb-item active">座位 {{ seat.seat_number }}</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">座位信息</h4>
+            </div>
+            <div class="card-body">
+                <h2 class="mb-4">座位 {{ seat.seat_number }}</h2>
+
+                <div class="mb-3">
+                    <strong>所属自习室：</strong>
+                    <a href="{% url 'room_detail' seat.room.id %}">{{ seat.room.name }}</a>
+                </div>
+
+                <div class="mb-3">
+                    <strong>位置：</strong> 第 {{ seat.row }} 行，第 {{ seat.column }} 列
+                </div>
+
+                <div class="mb-3">
+                    <strong>状态：</strong>
+                    {% if seat.status == 'available' %}
+                        <span class="badge bg-success">可预约</span>
+                    {% elif seat.status == 'occupied' %}
+                        <span class="badge bg-danger">已预约</span>
+                    {% else %}
+                        <span class="badge bg-secondary">不可用</span>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <strong>配置：</strong>
+                    <div class="mt-2">
+                        {% if seat.has_power %}
+                        <span class="badge bg-info"><i class="bi bi-plug"></i> 有电源</span>
+                        {% endif %}
+                        {% if seat.has_lamp %}
+                        <span class="badge bg-warning"><i class="bi bi-lightbulb"></i> 有台灯</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if seat.description %}
+                <div class="mb-3">
+                    <strong>描述：</strong>
+                    <p>{{ seat.description }}</p>
+                </div>
+                {% endif %}
+
+                {% if user.is_authenticated and seat.status == 'available' %}
+                <a href="{% url 'create_booking' seat.room.id %}" class="btn btn-primary btn-lg w-100">
+                    <i class="bi bi-calendar-plus"></i> 预约此座位
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0">近期预约情况</h5>
+            </div>
+            <div class="card-body">
+                {% if bookings %}
+                <div class="list-group">
+                    {% for booking in bookings %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">{{ booking.booking_date }}</h6>
+                                <p class="mb-0">
+                                    <span class="badge badge-morning">{{ booking.get_time_slot_display }}</span>
+                                </p>
+                            </div>
+                            <span class="badge bg-primary">已预约</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info mb-0">
+                    <i class="bi bi-info-circle"></i> 暂无预约记录
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}签到记录 - 自习室预约系统{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">
+    <i class="bi bi-clipboard-check"></i> 我的签到记录
+</h2>
+
+{% if checkins %}
+<div class="card shadow">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>自习室</th>
+                        <th>座位</th>
+                        <th>日期</th>
+                        <th>时段</th>
+                        <th>签到时间</th>
+                        <th>签退时间</th>
+                        <th>使用时长</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for checkin in checkins %}
+                    <tr>
+                        <td>{{ checkin.booking.seat.room.name }}</td>
+                        <td>{{ checkin.booking.seat.seat_number }}</td>
+                        <td>{{ checkin.booking.booking_date }}</td>
+                        <td>
+                            <span class="badge badge-{{ checkin.booking.time_slot }}">
+                                {{ checkin.booking.get_time_slot_display }}
+                            </span>
+                        </td>
+                        <td>{{ checkin.checkin_time|date:"Y-m-d H:i" }}</td>
+                        <td>
+                            {% if checkin.checkout_time %}
+                                {{ checkin.checkout_time|date:"Y-m-d H:i" }}
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if checkin.duration > 0 %}
+                                <span class="badge bg-info">{{ checkin.duration }} 分钟</span>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-primary">{{ checkins.count }}</h3>
+                    <p class="text-muted mb-0">总签到次数</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-success">
+                        {% widthratio checkins|length 1 60 %}
+                    </h3>
+                    <p class="text-muted mb-0">预计学习小时数</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-info">
+                        {{ checkins.0.checkin_time|date:"Y-m-d"|default:"-" }}
+                    </h3>
+                    <p class="text-muted mb-0">最近签到</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<div class="alert alert-info">
+    <i class="bi bi-info-circle"></i> 您还没有签到记录
+    <a href="{% url 'room_list' %}" class="alert-link">去预约自习室</a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}首页 - 大学生自习室预约系统{% endblock %}
+
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded-3 mb-4">
+    <h1 class="display-4">欢迎使用自习室预约系统</h1>
+    <p class="lead">轻松预约自习座位，高效管理学习时间</p>
+    <hr class="my-4">
+    <p>选择您喜欢的自习室和座位，开始您的学习之旅</p>
+    {% if not user.is_authenticated %}
+    <a class="btn btn-primary btn-lg" href="{% url 'register' %}" role="button">
+        <i class="bi bi-person-plus"></i> 立即注册
+    </a>
+    <a class="btn btn-outline-primary btn-lg" href="{% url 'login' %}" role="button">
+        <i class="bi bi-box-arrow-in-right"></i> 登录
+    </a>
+    {% else %}
+    <a class="btn btn-primary btn-lg" href="{% url 'room_list' %}" role="button">
+        <i class="bi bi-search"></i> 浏览自习室
+    </a>
+    {% endif %}
+</div>
+
+<h2 class="mb-4">开放的自习室</h2>
+
+{% if rooms %}
+<div class="row">
+    {% for room in rooms %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            {% if room.image %}
+                <img src="{{ room.image.url }}" class="card-img-top room-image" alt="{{ room.name }}">
+            {% else %}
+                <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="bi bi-building" style="font-size: 4rem;"></i>
+                </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ room.name }}</h5>
+                <p class="card-text text-muted">
+                    <i class="bi bi-geo-alt"></i> {{ room.location }}
+                </p>
+                <p class="card-text">{{ room.description|truncatewords:20 }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-success">{{ room.available_seats }}/{{ room.total_seats }} 可用</span>
+                    </div>
+                    <div class="text-muted small">
+                        <i class="bi bi-clock"></i> {{ room.open_time|time:"H:i" }} - {{ room.close_time|time:"H:i" }}
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent">
+                <a href="{% url 'room_detail' room.id %}" class="btn btn-primary btn-sm w-100">
+                    <i class="bi bi-eye"></i> 查看详情
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    <i class="bi bi-info-circle"></i> 暂无开放的自习室
+</div>
+{% endif %}
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-calendar-check text-primary" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">在线预约</h5>
+                <p class="card-text">随时随地在线预约自习室座位</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-clock-history text-success" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">实时更新</h5>
+                <p class="card-text">实时查看座位占用状态</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-phone text-info" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">签到管理</h5>
+                <p class="card-text">到达后一键签到，方便快捷</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

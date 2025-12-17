@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}预约座位 - {{ room.name }}{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">首页</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'room_list' %}">自习室列表</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'room_detail' room.id %}">{{ room.name }}</a></li>
+        <li class="breadcrumb-item active">预约座位</li>
+    </ol>
+</nav>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-calendar-plus"></i> 预约座位 - {{ room.name }}</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>预约须知：</strong>
+                    <ul class="mb-0 mt-2">
+                        <li>每人每日最多可预约3个时段</li>
+                        <li>请在预约时段开始后及时签到，否则预约将自动取消</li>
+                        <li>可以提前取消不需要的预约</li>
+                    </ul>
+                </div>
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="{{ form.seat.id_for_label }}" class="form-label">选择座位</label>
+                        {{ form.seat }}
+                        {% if form.seat.errors %}
+                            <div class="text-danger">{{ form.seat.errors }}</div>
+                        {% endif %}
+                        <div class="form-text">请选择可用的座位</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.booking_date.id_for_label }}" class="form-label">预约日期</label>
+                        {{ form.booking_date }}
+                        {% if form.booking_date.errors %}
+                            <div class="text-danger">{{ form.booking_date.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.time_slot.id_for_label }}" class="form-label">时间段</label>
+                        {{ form.time_slot }}
+                        {% if form.time_slot.errors %}
+                            <div class="text-danger">{{ form.time_slot.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.note.id_for_label }}" class="form-label">备注（可选）</label>
+                        {{ form.note }}
+                        {% if form.note.errors %}
+                            <div class="text-danger">{{ form.note.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-check-circle"></i> 确认预约
+                        </button>
+                        <a href="{% url 'room_detail' room.id %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> 返回
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
